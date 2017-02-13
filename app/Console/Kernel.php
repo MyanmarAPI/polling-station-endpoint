@@ -14,7 +14,10 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \Hexcores\Api\Console\ApiKeyGenerate::class,
         \App\Console\Commands\ImportCommand::class,
-        \App\Console\Commands\JsonImportCommand::class
+        \App\Console\Commands\JsonImportCommand::class,
+        \App\Console\Commands\MongoImportCommand::class,
+        \App\Console\Commands\DropCommand::class,
+        \App\Console\Commands\CSVToJsonCommand::class 
     ];
 
     /**
