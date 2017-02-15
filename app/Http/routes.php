@@ -24,7 +24,15 @@ $app->group([
     });
 });
 
-$app->group(['middleware' => 'auth'], function () use ($app)
-{
-    // do your stuff here
-});
+$app->group([
+	'middleware' 	=> 'auth',
+	'prefix' 		=> 'polling-station/v1', 
+	'namespace' 	=> 'App\Http\Controllers'
+	], 
+	function () use ($app)
+	{
+		$app->get('/list', 'PollingStationController@psList');
+
+		$app->get('/{id}', 'PollingStationController@getByID');
+	}
+);
