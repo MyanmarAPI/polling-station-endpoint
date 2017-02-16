@@ -72,7 +72,10 @@ class CSVToJsonCommand extends Command{
             if ($index == 0) { //Header Keys
                 $keys = $row;
             } else {
-
+                $voting_ward_villages = [];
+                if (!empty($row[8])) {
+                    array_push($voting_ward_villages, $row[8]);
+                }
                 if (!empty($row[0])) {
                     //New Row
                     $arr_data = [
@@ -85,28 +88,32 @@ class CSVToJsonCommand extends Command{
                             [
                                 'number' => (int)$row[6],
                                 'location' => $row[7],
-                                'voting_ward_villages' => [
-                                    $row[8]
-                                ]
+                                'voting_ward_villages' => $voting_ward_villages
                             ]
                         ]
                     ];
+
                     array_push($json, $arr_data);
 
                 } else {
                     //Get Last Array
                     $last_index = count($json) - 1;
                     $last_ps = count($json[$last_index]['polling_stations']) - 1;
-                    if ($json[$last_index]['polling_stations'][$last_ps]['location'] == $row[7]) {
-                        array_push($json[$last_index]['polling_stations'][$last_ps]['voting_ward_villages'], $row[8]);
+
+                    if (($json[$last_index]['polling_stations'][$last_ps]['location'] == $row[7] && $json[$last_index]['polling_stations'][$last_ps]['number'] == (int)$row[6]) || (empty($row[6]) && empty($row[7]))) {
+
+                        if (!empty($row[8])) {
+                            array_push($json[$last_index]['polling_stations'][$last_ps]['voting_ward_villages'], $row[8]);
+                        }
+
                     } else {
+
                         array_push($json[$last_index]['polling_stations'], [
                             'number' => (int)$row[6],
                             'location' => $row[7],
-                            'voting_ward_villages' => [
-                                $row[8]
-                            ]
+                            'voting_ward_villages' => $voting_ward_villages
                         ]);
+
                     }
                 }
 
